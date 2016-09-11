@@ -8,7 +8,8 @@ class DrivingHistoryCalculator
       trips = collect_trips(lines)
       default_trips = create_default_trips(drivers)
       reported_trips = create_reported_trips(trips)
-      create_reportable_trips(default_trips.merge(reported_trips))
+      sorted_trips = sort_trips(default_trips.merge(reported_trips).values)
+      create_reportable_trips(sorted_trips)
     end
 
     private
@@ -39,7 +40,10 @@ class DrivingHistoryCalculator
     def create_default_trips(drivers)
       drivers.map{ |driver|
         driver_tokens = driver.split(RECORD_SPLIT_PATTERN)
-        {driver_tokens[DRIVER_NAME_INDEX] => default_trip_data}
+        driver_name = driver_tokens[DRIVER_NAME_INDEX]
+        trip_data = default_trip_data
+        trip_data[:driver_name] = driver_name
+        {driver_name => trip_data}
       }.reduce({}, :merge)
     end
 
@@ -65,7 +69,9 @@ class DrivingHistoryCalculator
       }.reduce({}) {|trip_summaries,trip|
         driver_name = trip.keys[0]
         if (!trip_summaries[driver_name])
-          trip_summaries[driver_name] = default_trip_data
+          trip_data = default_trip_data
+          trip_data[:driver_name] = driver_name
+          trip_summaries[driver_name] = trip_data
         end
 
         update_summary_distance(trip_summaries, trip, driver_name)
@@ -109,12 +115,16 @@ class DrivingHistoryCalculator
       (distance / normalized_trip_minutes)
     end
 
+    def sort_trips(trips)
+      trips.sort{|trip1,trip2| trip2[:distance] <=> trip1[:distance]}
+    end
+
     def create_reportable_trips(driver_trips)
-      reported_trips = driver_trips.map {|key, value|
+      reported_trips = driver_trips.map {|value|
           if (value[:speed])
-            "#{key}: #{value[:distance].round.to_i} miles @ #{value[:speed]} mph"
+            "#{value[:driver_name]}: #{value[:distance].round.to_i} miles @ #{value[:speed]} mph"
           else
-            "#{key}: #{value[:distance].round.to_i} miles"
+            "#{value[:driver_name]}: #{value[:distance].round.to_i} miles"
           end
         }
 

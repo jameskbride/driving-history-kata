@@ -97,6 +97,23 @@ describe DrivingHistoryCalculator do
         expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
         expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
       end
+
+      it 'sorts trips by total distance' do
+        driving_records = [
+          'Driver Dan',
+          'Driver Steve',
+          'Driver Edward',
+          'Trip Edward 06:30 06:45 10.7',
+          'Trip Dan 07:15 07:45 17.3',
+        ]
+
+        report_lines = calculator.calc(driving_records)
+
+        expect(report_lines.length).to eq(3)
+        expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
+        expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
+        expect(report_lines[2]).to eq('Steve: 0 miles')
+      end
     end
 
     describe 'When there are extremely slow or fast trips' do
@@ -111,8 +128,8 @@ describe DrivingHistoryCalculator do
         report_lines = calculator.calc(driving_records)
 
         expect(report_lines.length).to eq(2)
-        expect(report_lines[0]).to eq('Dan: 0 miles')
-        expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
+        expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
+        expect(report_lines[1]).to eq('Dan: 0 miles')
       end
 
       it 'excludes trips with speeds greater than 100 mph' do
@@ -126,8 +143,8 @@ describe DrivingHistoryCalculator do
         report_lines = calculator.calc(driving_records)
 
         expect(report_lines.length).to eq(2)
-        expect(report_lines[0]).to eq('Dan: 0 miles')
-        expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
+        expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
+        expect(report_lines[1]).to eq('Dan: 0 miles')
       end
 
     end
