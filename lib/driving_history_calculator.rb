@@ -21,6 +21,8 @@ class DrivingHistoryCalculator
     END_TIME_INDEX = 3
     TRIP_DISTANCE_INDEX = 4
     MINUTES_IN_AN_HOUR = 60
+    MINIMUM_SPEED = 5
+    MAXIMUM_SPEED = 100
 
     def collect_drivers(lines)
       lines.select{ |line|
@@ -59,7 +61,7 @@ class DrivingHistoryCalculator
         }
       }.reject {|trip|
         speed = trip[trip.keys[0]][:speed]
-        speed == nil || speed < 5
+        speed == nil || speed < MINIMUM_SPEED || speed > MAXIMUM_SPEED
       }.reduce({}) {|trip_summaries,trip|
         driver_name = trip.keys[0]
         if (!trip_summaries[driver_name])
