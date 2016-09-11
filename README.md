@@ -1,3 +1,23 @@
+## Notes
+My approach here was to use TDD to implement the solution incrementally. You'll notice in the git history that each of my commits is either a test 
+and the accompanying production code, or a refactoring step. I attempted to bite off a small part of the problem one step at a time, 
+and to write a testcase for each of the stated requirements.  My next steps here would be to extract further classes from the current DrivingHistoryCalculator in order to 
+make it easier to maintain.  I noticed early in the process that the problem was primarily a MapReduce issue (Do something to each of the lines, and then summarize them.), which 
+is reflected mostly in the `DrivingHistoryCalculator.create_reported_trips` method.
+
+### Setup
+1. Insure Ruby 2.3.1 is installed (via RVM or other)
+2. Install bundler if you don't already have it: `gem install bundler`
+3. Execute `bundle install` from the root of the project
+
+### Running the Tests
+1. To run the tests simply execute `rake`.  The default task is to run the RSpec tests
+
+## Usage
+This script accepts input from stdin.  To execute make sure you have followed the setup instructions above, then pass input to `driving_history_reporter.rb`, which is the entry point.
+
+Example usage: `cat input.txt | ruby driving_history_reporter.rb`
+
 ## Problem Statement
 
 Let's write some code to track driving history for people.
