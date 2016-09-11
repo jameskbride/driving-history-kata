@@ -148,4 +148,19 @@ describe DrivingHistoryCalculator do
       end
 
     end
+
+  it 'ignores duplicate Driver entries' do
+    driving_records = [
+        'Driver Dan',
+        'Driver Dan',
+        'Driver Edward',
+        'Driver Edward',
+        'Trip Edward 06:30 06:45 10.7'
+    ]
+
+    report_lines = calculator.calc(driving_records)
+    expect(report_lines.length).to eq(2)
+    expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
+    expect(report_lines[1]).to eq('Dan: 0 miles')
+  end
 end

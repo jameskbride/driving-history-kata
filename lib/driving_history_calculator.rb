@@ -1,7 +1,6 @@
 class DrivingHistoryCalculator
 
     def calc(lines)
-      # TODO: Handle duplicate Drivers
       # TODO: Handle invalid command entries
       # TODO: Handle invalidly formatted commands
       drivers = collect_drivers(lines)
@@ -55,10 +54,7 @@ class DrivingHistoryCalculator
         end_time = Time.parse(trip_tokens[END_TIME_INDEX])
         trip_minutes = calc_trip_minutes(start_time, end_time)
         normalized_trip_minutes = normalize_trip_minutes(trip_minutes)
-        speed = nil
-        if (normalized_trip_minutes > 0)
-          speed = calc_speed(normalized_trip_minutes, distance)
-        end
+        speed = normalized_trip_minutes > 0 ? calc_speed(normalized_trip_minutes, distance) : nil
         { trip_tokens[DRIVER_NAME_INDEX] => {:distance => distance,
                                              :trip_minutes => trip_minutes,
                                              :speed => speed }
