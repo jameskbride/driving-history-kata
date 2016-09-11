@@ -1,7 +1,6 @@
 class DrivingHistoryCalculator
 
     def calc(lines)
-      # TODO: Handle invalid command entries
       # TODO: Handle invalidly formatted commands
       drivers = collect_drivers(lines)
       trips = collect_trips(lines)
