@@ -3,7 +3,6 @@ require 'time'
 class DrivingHistoryCalculator
 
     def calc(lines)
-      # TODO: Handle invalidly formatted commands
       drivers = collect_drivers(lines)
       trips = collect_trips(lines)
       default_trips = create_default_trips(drivers)
@@ -33,7 +32,7 @@ class DrivingHistoryCalculator
 
     def collect_trips(lines)
       lines.select{ |line|
-        line.start_with? COMMAND_TRIP
+        /^Trip\s.*\s\d{2}:\d{2}\s\d{2}:\d{2}\s.*\d\.?\d*/ =~ line
       }
     end
 
