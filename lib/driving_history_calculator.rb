@@ -55,7 +55,7 @@ class DrivingHistoryCalculator
         end
 
         update_summary_distance(trip_summaries, trip, driver_name)
-        updated_summary_minutes(trip_summaries, trip, driver_name)
+        update_summary_minutes(trip_summaries, trip, driver_name)
         update_summary_speed(trip_summaries, trip, driver_name)
 
         trip_summaries
@@ -74,7 +74,7 @@ class DrivingHistoryCalculator
       trip_summaries[driver_name][:distance] = updated_distance
     end
 
-    def updated_summary_minutes(trip_summaries, trip, driver_name)
+    def update_summary_minutes(trip_summaries, trip, driver_name)
       current_trip_minutes = trip_summaries[driver_name][:trip_minutes]
       updated_trip_minutes = current_trip_minutes + trip[driver_name][:trip_minutes]
       trip_summaries[driver_name][:trip_minutes] = updated_trip_minutes
