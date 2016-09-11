@@ -4,9 +4,10 @@ class DrivingHistoryCalculator
       # TODO: Handle duplicate Drivers
       # TODO: Handle invalid command entries
       # TODO: Handle invalidly formatted commands
-      driver_names = collect_drivers(lines)
-      trips = collect_trips(lines)
-      create_reportable_trips(driver_names, trips)
+      drivers = collect_drivers(lines)
+      default_driver_trips = create_default_trips(drivers)
+      trips = collect_reported_trips(lines)
+      create_reportable_trips(default_driver_trips.merge(trips))
     end
 
     private
@@ -21,17 +22,19 @@ class DrivingHistoryCalculator
     MINUTES_IN_AN_HOUR = 60
 
     def collect_drivers(lines)
-      driver_names = lines.select{ |line|
+      lines.select{ |line|
         line.start_with? COMMAND_DRIVER
-      }.map{ |driver|
+      }
+    end
+
+    def create_default_trips(drivers)
+      drivers.map{ |driver|
         driver_tokens = driver.split(RECORD_SPLIT_PATTERN)
         {driver_tokens[DRIVER_NAME_INDEX] => default_trip_data}
       }.reduce({}, :merge)
-
-      driver_names
     end
 
-    def collect_trips(lines)
+    def collect_reported_trips(lines)
       trips = lines.select{ |line|
         line.start_with? COMMAND_TRIP
       }.map {|trip|
@@ -67,9 +70,8 @@ class DrivingHistoryCalculator
       trip_minutes = (end_time - start_time) / MINUTES_IN_AN_HOUR
     end
 
-    def create_reportable_trips(drivers, trips)
-      reported_trips = drivers.merge(trips)
-        .map {|key, value|
+    def create_reportable_trips(driver_trips)
+      reported_trips = driver_trips.map {|key, value|
           distance = value[:distance]
           normalized_trip_minutes = value[:trip_minutes] / MINUTES_IN_AN_HOUR
 
