@@ -25,7 +25,7 @@ class DrivingHistoryCalculator
         line.start_with? COMMAND_DRIVER
       }.map{ |driver|
         driver_tokens = driver.split(RECORD_SPLIT_PATTERN)
-        {driver_tokens[DRIVER_NAME_INDEX] => {:distance => 0, :trip_minutes => 0}}
+        {driver_tokens[DRIVER_NAME_INDEX] => default_trip_data}
       }.reduce({}, :merge)
 
       driver_names
@@ -40,9 +40,25 @@ class DrivingHistoryCalculator
         trip_minutes = calc_trip_minutes(trip_tokens)
 
         { trip_tokens[DRIVER_NAME_INDEX] => {:distance => distance, :trip_minutes => trip_minutes } }
-      }.reduce({}, :merge)
+      }.reduce({}) {|trip_summaries,trip|
+        driver_name = trip.keys[0]
+        if (!trip_summaries[driver_name])
+          trip_summaries[driver_name] = default_trip_data
+        end
+        current_distance = trip_summaries[driver_name][:distance]
+        trip_summaries[driver_name][:distance] = current_distance + trip[driver_name][:distance]
+
+        current_trip_minutes = trip_summaries[driver_name][:trip_minutes]
+        trip_summaries[driver_name][:trip_minutes] = current_trip_minutes + trip[driver_name][:trip_minutes]
+
+        trip_summaries
+      }
 
       trips
+    end
+
+    def default_trip_data
+      {:distance => 0, :trip_minutes => 0}
     end
 
     def calc_trip_minutes(trip_tokens)
