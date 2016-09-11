@@ -68,8 +68,8 @@ describe DrivingHistoryCalculator do
       end
     end
 
-    describe 'When there are mixed entries including drivers with no trips' do
-      it 'outputs all entries' do
+    describe 'When there are mixed entries' do
+      it 'includes all drivers whether they have trips or not' do
         driving_records = [
           'Driver Dan',
           'Trip Dan 07:15 07:45 17.3',
@@ -81,6 +81,21 @@ describe DrivingHistoryCalculator do
         expect(report_lines.length).to eq(2)
         expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
         expect(report_lines[1]).to eq('Edward: 0 miles')
+      end
+
+      it 'includes multiple drivers with multiple trips' do
+        driving_records = [
+          'Driver Dan',
+          'Trip Dan 07:15 07:45 17.3',
+          'Driver Edward',
+          'Trip Edward 06:30 06:45 10.7'
+        ]
+
+        report_lines = calculator.calc(driving_records)
+
+        expect(report_lines.length).to eq(2)
+        expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
+        expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
       end
     end
 
