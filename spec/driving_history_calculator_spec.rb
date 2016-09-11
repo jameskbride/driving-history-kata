@@ -1,5 +1,3 @@
-require 'stringio'
-
 describe DrivingHistoryCalculator do
 
     let(:calculator) { DrivingHistoryCalculator.new }

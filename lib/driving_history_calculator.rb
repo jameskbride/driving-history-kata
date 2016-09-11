@@ -1,3 +1,5 @@
+require 'time'
+
 class DrivingHistoryCalculator
 
     def calc(lines)
