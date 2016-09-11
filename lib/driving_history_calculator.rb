@@ -48,8 +48,18 @@ class DrivingHistoryCalculator
         start_time = Time.parse(trip_tokens[START_TIME_INDEX])
         end_time = Time.parse(trip_tokens[END_TIME_INDEX])
         trip_minutes = calc_trip_minutes(start_time, end_time)
-
-        { trip_tokens[DRIVER_NAME_INDEX] => {:distance => distance, :trip_minutes => trip_minutes } }
+        normalized_trip_minutes = normalize_trip_minutes(trip_minutes)
+        speed = nil
+        if (normalized_trip_minutes > 0)
+          speed = calc_speed(normalized_trip_minutes, distance)
+        end
+        { trip_tokens[DRIVER_NAME_INDEX] => {:distance => distance,
+                                             :trip_minutes => trip_minutes,
+                                             :speed => speed }
+        }
+      }.reject {|trip|
+        speed = trip[trip.keys[0]][:speed]
+        speed == nil || speed < 5
       }.reduce({}) {|trip_summaries,trip|
         driver_name = trip.keys[0]
         if (!trip_summaries[driver_name])
@@ -81,12 +91,20 @@ class DrivingHistoryCalculator
     end
 
     def update_summary_speed(trip_summaries, driver_name)
-      normalized_trip_minutes = trip_summaries[driver_name][:trip_minutes] / MINUTES_IN_AN_HOUR
+      normalized_trip_minutes = normalize_trip_minutes(trip_summaries[driver_name][:trip_minutes])
       speed = nil
       if (normalized_trip_minutes > 0)
-        speed = (trip_summaries[driver_name][:distance] / normalized_trip_minutes).round.to_i
+        speed = calc_speed(normalized_trip_minutes, trip_summaries[driver_name][:distance]).round.to_i
       end
       trip_summaries[driver_name][:speed] = speed
+    end
+
+    def normalize_trip_minutes(trip_minutes)
+      trip_minutes / MINUTES_IN_AN_HOUR
+    end
+
+    def calc_speed(normalized_trip_minutes, distance)
+      (distance / normalized_trip_minutes)
     end
 
     def create_reportable_trips(driver_trips)

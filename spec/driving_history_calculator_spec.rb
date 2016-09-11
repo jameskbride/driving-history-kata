@@ -99,5 +99,20 @@ describe DrivingHistoryCalculator do
       end
     end
 
+    describe 'When there are extremely slow or fast trips' do
+      it 'excludes trips at less than 5 mph' do
+        driving_records = [
+            'Driver Dan',
+            'Trip Dan 07:15 08:15 4.9',
+            'Driver Edward',
+            'Trip Edward 06:30 06:45 10.7'
+        ]
 
+        report_lines = calculator.calc(driving_records)
+
+        expect(report_lines.length).to eq(2)
+        expect(report_lines[0]).to eq('Dan: 0 miles')
+        expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
+      end
+    end
 end
