@@ -5,8 +5,8 @@ class DrivingHistoryCalculator
       # TODO: Handle invalid command entries
       # TODO: Handle invalidly formatted commands
       drivers = collect_drivers(lines)
-      default_trips = create_default_trips(drivers)
       trips = collect_trips(lines)
+      default_trips = create_default_trips(drivers)
       reported_trips = create_reported_trips(trips)
       create_reportable_trips(default_trips.merge(reported_trips))
     end
@@ -28,17 +28,17 @@ class DrivingHistoryCalculator
       }
     end
 
+    def collect_trips(lines)
+      lines.select{ |line|
+        line.start_with? COMMAND_TRIP
+      }
+    end
+
     def create_default_trips(drivers)
       drivers.map{ |driver|
         driver_tokens = driver.split(RECORD_SPLIT_PATTERN)
         {driver_tokens[DRIVER_NAME_INDEX] => default_trip_data}
       }.reduce({}, :merge)
-    end
-
-    def collect_trips(lines)
-      lines.select{ |line|
-        line.start_with? COMMAND_TRIP
-      }
     end
 
     def create_reported_trips(trips)
@@ -54,34 +54,39 @@ class DrivingHistoryCalculator
           trip_summaries[driver_name] = default_trip_data
         end
 
-        current_distance = trip_summaries[driver_name][:distance]
-        updated_distance = current_distance + trip[driver_name][:distance]
-        trip_summaries[driver_name][:distance] = updated_distance
-
-        current_trip_minutes = trip_summaries[driver_name][:trip_minutes]
-        updated_trip_minutes = current_trip_minutes + trip[driver_name][:trip_minutes]
-        trip_summaries[driver_name][:trip_minutes] = updated_trip_minutes
-
-        normalized_trip_minutes = updated_trip_minutes / MINUTES_IN_AN_HOUR
-        speed = nil
-        if (normalized_trip_minutes > 0)
-          speed = (updated_distance / normalized_trip_minutes).round.to_i
-        end
-        trip_summaries[driver_name][:speed] = speed
+        update_summary_distance(trip_summaries, trip, driver_name)
+        updated_summary_minutes(trip_summaries, trip, driver_name)
+        update_summary_speed(trip_summaries, trip, driver_name)
 
         trip_summaries
       }
-
-    end
-
-    def default_trip_data
-      {:distance => 0, :trip_minutes => 0}
     end
 
     def calc_trip_minutes(trip_tokens)
       start_time = Time.parse(trip_tokens[START_TIME_INDEX])
       end_time = Time.parse(trip_tokens[END_TIME_INDEX])
       trip_minutes = (end_time - start_time) / MINUTES_IN_AN_HOUR
+    end
+
+    def update_summary_distance(trip_summaries, trip, driver_name)
+      current_distance = trip_summaries[driver_name][:distance]
+      updated_distance = current_distance + trip[driver_name][:distance]
+      trip_summaries[driver_name][:distance] = updated_distance
+    end
+
+    def updated_summary_minutes(trip_summaries, trip, driver_name)
+      current_trip_minutes = trip_summaries[driver_name][:trip_minutes]
+      updated_trip_minutes = current_trip_minutes + trip[driver_name][:trip_minutes]
+      trip_summaries[driver_name][:trip_minutes] = updated_trip_minutes
+    end
+
+    def update_summary_speed(trip_summaries, trip, driver_name)
+      normalized_trip_minutes = trip_summaries[driver_name][:trip_minutes] / MINUTES_IN_AN_HOUR
+      speed = nil
+      if (normalized_trip_minutes > 0)
+        speed = (trip_summaries[driver_name][:distance] / normalized_trip_minutes).round.to_i
+      end
+      trip_summaries[driver_name][:speed] = speed
     end
 
     def create_reportable_trips(driver_trips)
@@ -94,5 +99,9 @@ class DrivingHistoryCalculator
         }
 
       reported_trips
+    end
+
+    def default_trip_data
+      {:distance => 0, :trip_minutes => 0}
     end
 end
