@@ -45,7 +45,9 @@ class DrivingHistoryCalculator
       trips.map {|trip|
         trip_tokens = trip.split(RECORD_SPLIT_PATTERN)
         distance = trip_tokens[TRIP_DISTANCE_INDEX].to_f
-        trip_minutes = calc_trip_minutes(trip_tokens)
+        start_time = Time.parse(trip_tokens[START_TIME_INDEX])
+        end_time = Time.parse(trip_tokens[END_TIME_INDEX])
+        trip_minutes = calc_trip_minutes(start_time, end_time)
 
         { trip_tokens[DRIVER_NAME_INDEX] => {:distance => distance, :trip_minutes => trip_minutes } }
       }.reduce({}) {|trip_summaries,trip|
@@ -56,16 +58,14 @@ class DrivingHistoryCalculator
 
         update_summary_distance(trip_summaries, trip, driver_name)
         update_summary_minutes(trip_summaries, trip, driver_name)
-        update_summary_speed(trip_summaries, trip, driver_name)
+        update_summary_speed(trip_summaries, driver_name)
 
         trip_summaries
       }
     end
 
-    def calc_trip_minutes(trip_tokens)
-      start_time = Time.parse(trip_tokens[START_TIME_INDEX])
-      end_time = Time.parse(trip_tokens[END_TIME_INDEX])
-      trip_minutes = (end_time - start_time) / MINUTES_IN_AN_HOUR
+    def calc_trip_minutes(start_time, end_time)
+      (end_time - start_time) / MINUTES_IN_AN_HOUR
     end
 
     def update_summary_distance(trip_summaries, trip, driver_name)
@@ -80,7 +80,7 @@ class DrivingHistoryCalculator
       trip_summaries[driver_name][:trip_minutes] = updated_trip_minutes
     end
 
-    def update_summary_speed(trip_summaries, trip, driver_name)
+    def update_summary_speed(trip_summaries, driver_name)
       normalized_trip_minutes = trip_summaries[driver_name][:trip_minutes] / MINUTES_IN_AN_HOUR
       speed = nil
       if (normalized_trip_minutes > 0)
