@@ -3,13 +3,12 @@ require 'trip'
 
 class DrivingHistoryCalculator
 
-    def calc(lines)
-      drivers = collect_drivers(lines)
-      trips = collect_trips(lines)
-      default_trips = create_default_trips(drivers)
-      reported_trips = create_reported_trips(trips)
-      sorted_trips = sort_trips(default_trips.merge(reported_trips).values)
-      create_reportable_trips(sorted_trips)
+  def calc(lines)
+    default_trips = create_default_trips_from_drivers(lines)
+    trips = collect_trips(lines)
+    summarized_trips = summarize_trips(trips)
+    sorted_trips = sort_trips(default_trips.merge(summarized_trips).values)
+    create_reportable_trips(sorted_trips)
     end
 
     private
@@ -23,10 +22,16 @@ class DrivingHistoryCalculator
     MINIMUM_SPEED = 5
     MAXIMUM_SPEED = 100
 
-    def collect_drivers(lines)
+    def create_default_trips_from_drivers(lines)
       lines.select{ |line|
         line.start_with? COMMAND_DRIVER
-      }
+      }.map{ |driver|
+        driver_tokens = driver.split(RECORD_SPLIT_PATTERN)
+        driver_name = driver_tokens[DRIVER_NAME_INDEX]
+        trip_data = default_trip_data
+        trip_data.driver_name = driver_name
+        {driver_name => trip_data}
+      }.reduce({}, :merge)
     end
 
     def collect_trips(lines)
@@ -40,24 +45,14 @@ class DrivingHistoryCalculator
         driver_name = trip_tokens[DRIVER_NAME_INDEX]
         trip = Trip.new(start_time, end_time, distance, driver_name)
         { driver_name => trip }
+      }.reject {|trip|
+        speed = trip[trip.keys[0]].calc_speed()
+        speed == nil || speed < MINIMUM_SPEED || speed > MAXIMUM_SPEED
       }
     end
 
-    def create_default_trips(drivers)
-      drivers.map{ |driver|
-        driver_tokens = driver.split(RECORD_SPLIT_PATTERN)
-        driver_name = driver_tokens[DRIVER_NAME_INDEX]
-        trip_data = default_trip_data
-        trip_data.driver_name = driver_name
-        {driver_name => trip_data}
-      }.reduce({}, :merge)
-    end
-
-    def create_reported_trips(trips)
-      trips.reject {|trip|
-        speed = trip[trip.keys[0]].calc_speed()
-        speed == nil || speed < MINIMUM_SPEED || speed > MAXIMUM_SPEED
-      }.reduce({}) {|trip_summaries,trip|
+    def summarize_trips(trips)
+      trips.reduce({}) {|trip_summaries,trip|
         driver_name = trip.keys[0]
         if (!trip_summaries[driver_name])
           trip_data = default_trip_data
