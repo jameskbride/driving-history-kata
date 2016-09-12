@@ -1,8 +1,7 @@
 ## Notes
 My approach here was to use TDD to implement the solution incrementally. You'll notice in the git history that each of my commits is either a test 
 and the accompanying production code, or a refactoring step. I attempted to bite off a small part of the problem one step at a time, 
-and to write a testcase for each of the stated requirements.  My next steps here would be to extract further classes from the current DrivingHistoryCalculator in order to 
-make it easier to maintain.  I noticed early in the process that the problem was primarily a MapReduce issue (Do something to each of the lines, and then summarize them.), which 
+and to write a testcase for each of the stated requirements.  I noticed early in the process that the problem was primarily a MapReduce issue (Do something to each of the lines, and then summarize them.), which
 is reflected mostly in the `DrivingHistoryCalculator.create_reported_trips` method.
 
 ### Setup

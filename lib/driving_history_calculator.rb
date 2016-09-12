@@ -21,6 +21,7 @@ class DrivingHistoryCalculator
     TRIP_DISTANCE_INDEX = 4
     MINIMUM_SPEED = 5
     MAXIMUM_SPEED = 100
+    VALID_TRIP_LINE_REGEX = /^Trip\s.*\s\d{2}:\d{2}\s\d{2}:\d{2}\s.*\d\.?\d*/
 
     def create_default_trips_from_drivers(lines)
       lines.select{ |line|
@@ -36,7 +37,7 @@ class DrivingHistoryCalculator
 
     def collect_trips(lines)
       lines.select{ |line|
-        /^Trip\s.*\s\d{2}:\d{2}\s\d{2}:\d{2}\s.*\d\.?\d*/ =~ line
+        VALID_TRIP_LINE_REGEX =~ line
       }.map {|trip_record|
         trip_tokens = trip_record.split(RECORD_SPLIT_PATTERN)
         distance = trip_tokens[TRIP_DISTANCE_INDEX].to_f
