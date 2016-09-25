@@ -7,6 +7,9 @@ class DrivingRecord
 
   attr_reader :name
 
+  MINIMUM_SPEED_MPH = 5
+  MAXIMUM_SPEED_MPH = 100
+
   def initialize(name)
     @name = name
     @trips = []
@@ -24,7 +27,7 @@ class DrivingRecord
 
   def calc_total_distance
     @trips.select{|trip|
-      trip.calc_trip_speed >= 5 && trip.calc_trip_speed <= 100
+      include_trip?(trip)
     }.map {|trip|
       trip.distance
     }.reduce(0) {|total, distance|
@@ -34,7 +37,7 @@ class DrivingRecord
 
   def calc_total_minutes
     @trips.select{|trip|
-      trip.calc_trip_speed >= 5  && trip.calc_trip_speed <= 100
+      include_trip?(trip)
     }.map {|trip|
       minutes = trip.calc_minutes
 
@@ -42,6 +45,10 @@ class DrivingRecord
     }.reduce(0) {|total, distance|
       total + distance
     }
+  end
+
+  def include_trip?(trip)
+    trip.calc_trip_speed >= MINIMUM_SPEED_MPH && trip.calc_trip_speed <= MAXIMUM_SPEED_MPH
   end
 
   def calc_average_speed
