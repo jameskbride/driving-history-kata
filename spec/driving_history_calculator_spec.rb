@@ -2,6 +2,14 @@ describe DrivingHistoryCalculator do
 
     let(:calculator) { DrivingHistoryCalculator.new }
 
+    describe 'When given no records' do
+      it 'outputs an empty report' do
+        report_lines = calculator.calc()
+
+        expect(report_lines).to be_empty
+      end
+    end
+
     describe 'When only Driver entries are found' do
       it 'outputs short entries' do
         driving_records = [
