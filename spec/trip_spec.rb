@@ -38,4 +38,18 @@ describe Trip do
     expect(trip.calc_minutes).to eq(60)
   end
 
+  describe 'when calculating trip speed' do
+    it 'calculates 0 when minutes are 0' do
+      trip = Trip.new('random', 0, '07:15', '07:15')
+
+      expect(trip.calc_trip_speed).to eq(0)
+    end
+
+    it 'calculates the trip speed when minutes are greater than 0' do
+      trip = Trip.new('random', 17.3, '07:15', '07:45')
+
+      expect(trip.calc_trip_speed).to eq(35)
+    end
+  end
+
 end

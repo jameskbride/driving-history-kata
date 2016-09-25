@@ -26,10 +26,10 @@ describe DrivingRecord do
   describe 'when sorting' do
     it 'compares the total distance' do
       shorter_record = DrivingRecord.new('short')
-      shorter_record.add_record(Trip.new('short', 5.0))
+      shorter_record.add_record(Trip.new('short', 5.0, '07:15', '07:25'))
 
       longer_record = DrivingRecord.new('longer')
-      longer_record.add_record(Trip.new('longer', 10.5))
+      longer_record.add_record(Trip.new('longer', 10.5, '07:15', '07:25'))
 
       expect(longer_record).to be < (shorter_record)
     end

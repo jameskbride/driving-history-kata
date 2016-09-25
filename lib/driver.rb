@@ -9,4 +9,8 @@ class Driver
   def calc_minutes
     0
   end
+
+  def calc_trip_speed
+    0
+  end
 end
