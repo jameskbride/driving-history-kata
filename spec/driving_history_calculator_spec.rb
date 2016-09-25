@@ -155,10 +155,24 @@ describe DrivingHistoryCalculator do
 
     calculator = DrivingHistoryCalculator.new(driving_records)
     report_lines = calculator.generate_report_lines()
-    
+
     expect(report_lines.length).to eq(2)
     expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
     expect(report_lines[1]).to eq('Dan: 0 miles')
+  end
+
+  it 'ignores entries with unknown commands' do
+      driving_records = [
+          'Driver Edward',
+          'Trip Edward 06:30 06:45 10.7',
+          'Passenger Alphonse'
+      ]
+
+      calculator = DrivingHistoryCalculator.new(driving_records)
+      report_lines = calculator.generate_report_lines()
+
+      expect(report_lines.length).to eq(1)
+      expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
   end
 
   #   end
@@ -198,18 +212,7 @@ describe DrivingHistoryCalculator do
   #
 
   #
-  # it 'ignores entries with unknown commands' do
-  #     driving_records = [
-  #         'Driver Edward',
-  #         'Trip Edward 06:30 06:45 10.7',
-  #         'Passenger Alphonse'
-  #     ]
-  #
-  #     report_lines = calculator.calc(driving_records)
-  #
-  #     expect(report_lines.length).to eq(1)
-  #     expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
-  # end
+
   #
   # it 'ignores entries which are not formatted correctly' do
   #   driving_records = [
