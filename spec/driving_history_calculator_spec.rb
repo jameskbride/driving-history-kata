@@ -91,6 +91,23 @@ describe DrivingHistoryCalculator do
         expect(report_lines.length).to eq(1)
         expect(report_lines[0]).to end_with('@ 43 mph')
       end
+
+      it 'includes multiple drivers with multiple trips' do
+        driving_records = [
+            'Driver Dan',
+            'Trip Dan 07:15 07:45 17.3',
+            'Driver Edward',
+            'Trip Edward 06:30 06:45 10.7'
+        ]
+
+        calculator = DrivingHistoryCalculator.new(driving_records)
+        report_lines = calculator.generate_report_lines()
+
+        expect(report_lines.length).to eq(2)
+        expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
+        expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
+      end
+
     end
 
 
@@ -129,22 +146,8 @@ describe DrivingHistoryCalculator do
       end
     end
 
-  #
-  #     it 'includes multiple drivers with multiple trips' do
-  #       driving_records = [
-  #         'Driver Dan',
-  #         'Trip Dan 07:15 07:45 17.3',
-  #         'Driver Edward',
-  #         'Trip Edward 06:30 06:45 10.7'
-  #       ]
-  #
-  #       report_lines = calculator.calc(driving_records)
-  #
-  #       expect(report_lines.length).to eq(2)
-  #       expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
-  #       expect(report_lines[1]).to eq('Edward: 11 miles @ 43 mph')
-  #     end
-  #
+
+
 
   #   end
   #
