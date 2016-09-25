@@ -77,20 +77,22 @@ describe DrivingHistoryCalculator do
         expect(report_lines.length).to eq(1)
         expect(report_lines[0]).to start_with('Dan: 32 miles')
       end
+
+      it 'calculates the average speed' do
+        driving_records = [
+            'Driver Dan',
+            'Trip Dan 07:15 07:45 17.3',
+            'Trip Dan 08:00 08:15 15'
+        ]
+
+        calculator = DrivingHistoryCalculator.new(driving_records)
+        report_lines = calculator.generate_report_lines()
+
+        expect(report_lines.length).to eq(1)
+        expect(report_lines[0]).to end_with('@ 43 mph')
+      end
     end
-  #
-  #     it 'calculates the average speed' do
-  #       driving_records = [
-  #         'Driver Dan',
-  #         'Trip Dan 07:15 07:45 17.3',
-  #         'Trip Dan 08:00 08:15 15'
-  #       ]
-  #
-  #       report_lines = calculator.calc(driving_records)
-  #
-  #       expect(report_lines.length).to eq(1)
-  #       expect(report_lines[0]).to end_with('@ 43 mph')
-  #     end
+
 
     describe 'When there are mixed entries' do
       it 'includes all drivers whether they have trips or not' do
