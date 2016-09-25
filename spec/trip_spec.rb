@@ -1,6 +1,6 @@
 describe Trip do
 
-  it 'should have a name' do
+  it 'has a name' do
     expected_name = 'expected_name'
 
     trip = Trip.new(expected_name)
@@ -8,7 +8,7 @@ describe Trip do
     expect(trip.name).to eq(expected_name)
   end
 
-  it 'should have a default distance' do
+  it 'has a default distance' do
     trip = Trip.new('random')
 
     expect(trip.distance).to eq(0)

@@ -13,10 +13,16 @@ class DrivingRecord
     end
   end
 
-  def to_s
-    total_distance = @trips.map {|trip|
+  def calc_total_distance
+    @trips.map {|trip|
       trip.distance
-    }.reduce {|total, distance| total + distance}
+    }.reduce {|total, distance|
+      total + distance
+    }
+  end
+
+  def to_s
+    total_distance = calc_total_distance
     "#{@name}: #{total_distance.round.to_i} miles"
   end
 end

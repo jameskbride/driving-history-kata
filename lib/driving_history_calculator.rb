@@ -7,15 +7,19 @@ class DrivingHistoryCalculator
     @input_records = input_records
     @driving_records = Hash.new
     @input_records.each { |record|
-      record = RecordParser::parse(record)
-      if !@driving_records[record.name]
-        driving_record = DrivingRecord.new(record.name)
-        driving_record.add_record(record)
-        @driving_records[driving_record.name] = driving_record
-      else
-        @driving_records[record.name].add_record(record)
-      end
+      add_record(record)
     }
+  end
+
+  def add_record(record)
+    record = RecordParser::parse(record)
+    if !@driving_records[record.name]
+      driving_record = DrivingRecord.new(record.name)
+      driving_record.add_record(record)
+      @driving_records[driving_record.name] = driving_record
+    else
+      @driving_records[record.name].add_record(record)
+    end
   end
 
   def calc()
