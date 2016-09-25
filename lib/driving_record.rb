@@ -1,4 +1,5 @@
 require 'driving_calculations'
+require 'driver'
 
 class DrivingRecord
   include Comparable
@@ -16,25 +17,29 @@ class DrivingRecord
   end
 
   def add_record(record)
-    if record.distance != nil
+    if record.distance
       @trips << record
     end
   end
 
   def calc_total_distance
-    @trips.map {|trip|
+    @trips.select{|trip|
+      trip.calc_trip_speed >= 5
+    }.map {|trip|
       trip.distance
-    }.reduce {|total, distance|
+    }.reduce(0) {|total, distance|
       total + distance
     }
   end
 
   def calc_total_minutes
-    @trips.map {|trip|
+    @trips.select{|trip|
+      trip.calc_trip_speed >= 5
+    }.map {|trip|
       minutes = trip.calc_minutes
 
       minutes == nil ? 0 : minutes
-    }.reduce {|total, distance|
+    }.reduce(0) {|total, distance|
       total + distance
     }
   end
