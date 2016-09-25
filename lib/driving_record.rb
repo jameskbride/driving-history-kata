@@ -1,5 +1,5 @@
-require 'driving_calculations'
-require 'driver'
+require_relative 'driving_calculations'
+require_relative 'driver'
 
 class DrivingRecord
   include Comparable

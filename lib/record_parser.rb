@@ -1,4 +1,5 @@
-require 'driver'
+require_relative 'driver'
+require_relative 'trip'
 
 class RecordParser
 

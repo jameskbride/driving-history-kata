@@ -1,6 +1,6 @@
-require 'driver'
+require_relative 'driver'
+require_relative 'driving_calculations'
 require 'time'
-require 'driving_calculations'
 
 class Trip < Driver
   include DrivingCalculations

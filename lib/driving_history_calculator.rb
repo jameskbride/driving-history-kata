@@ -1,5 +1,5 @@
-require 'driving_record'
-require 'record_parser'
+require_relative 'driving_record'
+require_relative 'record_parser'
 
 class DrivingHistoryCalculator
 
