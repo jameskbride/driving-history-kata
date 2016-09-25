@@ -47,7 +47,6 @@ class DrivingRecord
     average_speed = calc_speed
     if (average_speed)
       "#{@name}: #{total_distance.round.to_i} miles @ #{average_speed} mph"
-
     else
       "#{@name}: #{total_distance.round.to_i} miles"
     end

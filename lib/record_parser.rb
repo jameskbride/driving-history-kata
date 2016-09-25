@@ -14,10 +14,26 @@ class RecordParser
 
   def self.parse(record)
     record_parts = record.split(SPLITTER_REGEX)
-    if record_parts[COMMAND_TYPE_INDEX] == COMMAND_DRIVER
-      Driver.new(record_parts[NAME_INDEX])
-    elsif record_parts[COMMAND_TYPE_INDEX] == COMMAND_TRIP
-      Trip.new(record_parts[NAME_INDEX], record_parts[DISTANCE_INDEX].to_f, record_parts[START_TIME_INDEX], record_parts[END_TIME_INDEX])
+    if can_parse_driver?(record_parts)
+      parse_driver(record_parts)
+    elsif can_parse_trip?(record_parts)
+      parse_trip(record_parts)
     end
+  end
+
+  def self.can_parse_driver?(record_parts)
+    record_parts[COMMAND_TYPE_INDEX] == COMMAND_DRIVER
+  end
+
+  def self.parse_driver(record_parts)
+    Driver.new(record_parts[NAME_INDEX])
+  end
+
+  def self.can_parse_trip?(record_parts)
+    record_parts[COMMAND_TYPE_INDEX] == COMMAND_TRIP
+  end
+
+  def self.parse_trip(record_parts)
+    Trip.new(record_parts[NAME_INDEX], record_parts[DISTANCE_INDEX].to_f, record_parts[START_TIME_INDEX], record_parts[END_TIME_INDEX])
   end
 end
