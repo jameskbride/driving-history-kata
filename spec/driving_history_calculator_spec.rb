@@ -144,6 +144,23 @@ describe DrivingHistoryCalculator do
       end
     end
 
+  it 'ignores duplicate Driver entries' do
+    driving_records = [
+        'Driver Dan',
+        'Driver Dan',
+        'Driver Edward',
+        'Driver Edward',
+        'Trip Edward 06:30 06:45 10.7'
+    ]
+
+    calculator = DrivingHistoryCalculator.new(driving_records)
+    report_lines = calculator.generate_report_lines()
+    
+    expect(report_lines.length).to eq(2)
+    expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
+    expect(report_lines[1]).to eq('Dan: 0 miles')
+  end
+
   #   end
   #
   #   describe 'When there are extremely slow or fast trips' do
@@ -179,20 +196,7 @@ describe DrivingHistoryCalculator do
   #
   #   end
   #
-  # it 'ignores duplicate Driver entries' do
-  #   driving_records = [
-  #       'Driver Dan',
-  #       'Driver Dan',
-  #       'Driver Edward',
-  #       'Driver Edward',
-  #       'Trip Edward 06:30 06:45 10.7'
-  #   ]
-  #
-  #   report_lines = calculator.calc(driving_records)
-  #   expect(report_lines.length).to eq(2)
-  #   expect(report_lines[0]).to eq('Edward: 11 miles @ 43 mph')
-  #   expect(report_lines[1]).to eq('Dan: 0 miles')
-  # end
+
   #
   # it 'ignores entries with unknown commands' do
   #     driving_records = [
