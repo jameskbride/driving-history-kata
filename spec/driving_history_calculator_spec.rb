@@ -1,9 +1,8 @@
 describe DrivingHistoryCalculator do
 
-    let(:calculator) { DrivingHistoryCalculator.new }
-
     describe 'When given no records' do
       it 'outputs an empty report' do
+        calculator = DrivingHistoryCalculator.new([])
         report_lines = calculator.calc()
 
         expect(report_lines).to be_empty
@@ -39,41 +38,29 @@ describe DrivingHistoryCalculator do
         expect(report_lines).to include('Dan: 0 miles')
         expect(report_lines).to include('Steve: 0 miles')
       end
-
-      # it 'outputs short entries' do
-      #   driving_records = [
-      #     'Driver Dan',
-      #     'Driver Steve'
-      #   ]
-      #
-      #   report_lines = calculator.calc(driving_records)
-      #
-      #   expect(report_lines.length).to eq(2)
-      #   expect(report_lines).to include('Dan: 0 miles')
-      #   expect(report_lines).to include('Steve: 0 miles')
-      # end
     end
 
-  #   describe 'When there is a single driver with a single trip' do
-  #     let(:driving_records) {driving_records = [
-  #       'Driver Dan',
-  #       'Trip Dan 07:15 07:45 17.3'
-  #     ]}
-  #
-  #     it 'calculates the distance' do
-  #       report_lines = calculator.calc(driving_records)
-  #
-  #       expect(report_lines.length).to eq(1)
-  #       expect(report_lines[0]).to start_with('Dan: 17 miles')
-  #     end
-  #
-  #     it 'calculates the speed' do
-  #       report_lines = calculator.calc(driving_records)
-  #
-  #       expect(report_lines.length).to eq(1)
-  #       expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
-  #     end
-  #   end
+    describe 'When there is a single driver with a single trip' do
+      let(:driving_records) {driving_records = [
+        'Driver Dan',
+        'Trip Dan 07:15 07:45 17.3'
+      ]}
+
+      it 'calculates the distance' do
+        calculator = DrivingHistoryCalculator.new(driving_records)
+        report_lines = calculator.calc()
+
+        expect(report_lines.length).to eq(1)
+        expect(report_lines[0]).to start_with('Dan: 17 miles')
+      end
+
+      # it 'calculates the speed' do
+      #   report_lines = calculator.calc(driving_records)
+      #
+      #   expect(report_lines.length).to eq(1)
+      #   expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
+      # end
+    end
   #
   #   describe 'When there are multiple entries for a single driver' do
   #     it 'calculates the total distance' do

@@ -6,4 +6,10 @@ describe Driver do
 
     expect(driver.name).to eq(expected_name)
   end
+
+  it 'should have a default distance of 0' do
+    driver = Driver.new('random')
+
+    expect(driver.distance).to eq(0)
+  end
 end

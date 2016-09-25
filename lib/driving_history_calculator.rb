@@ -8,8 +8,13 @@ class DrivingHistoryCalculator
     @driving_records = Hash.new
     @input_records.each { |record|
       record = RecordParser::parse(record)
-      driving_record = DrivingRecord.new(record.name)
-      @driving_records[driving_record.name] = driving_record
+      if !@driving_records[record.name]
+        driving_record = DrivingRecord.new(record.name)
+        driving_record.add_record(record)
+        @driving_records[driving_record.name] = driving_record
+      else
+        @driving_records[record.name].add_record(record)
+      end
     }
   end
 
