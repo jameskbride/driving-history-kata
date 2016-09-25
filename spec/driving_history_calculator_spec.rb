@@ -25,6 +25,21 @@ describe DrivingHistoryCalculator do
         expect(report_lines[0]).to eq('Dan: 0 miles')
       end
 
+      it 'can parse multiple driver records' do
+        driving_records = [
+            'Driver Dan',
+            'Driver Steve'
+        ]
+
+        calculator = DrivingHistoryCalculator.new(driving_records)
+
+        report_lines = calculator.calc()
+
+        expect(report_lines.length).to eq(2)
+        expect(report_lines).to include('Dan: 0 miles')
+        expect(report_lines).to include('Steve: 0 miles')
+      end
+
       # it 'outputs short entries' do
       #   driving_records = [
       #     'Driver Dan',
