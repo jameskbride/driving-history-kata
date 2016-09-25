@@ -24,7 +24,7 @@ class DrivingRecord
 
   def calc_total_distance
     @trips.select{|trip|
-      trip.calc_trip_speed >= 5
+      trip.calc_trip_speed >= 5 && trip.calc_trip_speed <= 100
     }.map {|trip|
       trip.distance
     }.reduce(0) {|total, distance|
@@ -34,7 +34,7 @@ class DrivingRecord
 
   def calc_total_minutes
     @trips.select{|trip|
-      trip.calc_trip_speed >= 5
+      trip.calc_trip_speed >= 5  && trip.calc_trip_speed <= 100
     }.map {|trip|
       minutes = trip.calc_minutes
 
