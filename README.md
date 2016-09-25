@@ -1,8 +1,12 @@
 ## Notes
 My approach here was to use TDD to implement the solution incrementally. You'll notice in the git history that each of my commits is either a test 
 and the accompanying production code, or a refactoring step. I attempted to bite off a small part of the problem one step at a time, 
-and to write a testcase for each of the stated requirements.  I noticed early in the process that the problem was primarily a MapReduce issue (Do something to each of the lines, and then summarize them.), which
-is reflected mostly in the `DrivingHistoryCalculator.create_reported_trips` method.
+and to write a testcase for each of the stated requirements.  
+
+This version takes a more OO approach rather than the Map/Reduce approach I originally took.  In this version I created a class for each record type, 
+as well as on for parsing the recordings, and one for holding all driver-related records. I also introduced a module for common calculation code. I retained the original interface class in order to allow
+the code to be refactored without losing the original tests.  Most of the classes are unit-tested, however the functionality was driven by integration tests,
+and there were opportunities for extraction that resulted in some code not being covered by unit tests.
 
 ### Setup
 1. Insure Ruby 2.3.1 is installed (via RVM or other)
