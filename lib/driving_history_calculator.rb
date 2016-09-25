@@ -22,13 +22,15 @@ class DrivingHistoryCalculator
     end
   end
 
-  def calc()
+  def generate_report_lines()
     if !@input_records.empty?
-      report_lines = []
-      @driving_records.each { |key, value|
-        report_lines << (value.to_s)
+      records = @driving_records.map {|key, value|
+         value
+      }.sort.map {|record|
+        record.to_s
       }
-      report_lines
+
+      records
     else
       []
     end

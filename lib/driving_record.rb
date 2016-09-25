@@ -1,10 +1,15 @@
 class DrivingRecord
+  include Comparable
 
   attr_reader :name
 
   def initialize(name)
     @name = name
     @trips = []
+  end
+
+  def <=>(other_driving_record)
+    other_driving_record.calc_total_distance <=> calc_total_distance
   end
 
   def add_record(record)
