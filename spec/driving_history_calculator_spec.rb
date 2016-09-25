@@ -31,7 +31,6 @@ describe DrivingHistoryCalculator do
         ]
 
         calculator = DrivingHistoryCalculator.new(driving_records)
-
         report_lines = calculator.generate_report_lines()
 
         expect(report_lines.length).to eq(2)
