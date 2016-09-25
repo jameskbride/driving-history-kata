@@ -1,5 +1,8 @@
+require 'driving_calculations'
+
 class DrivingRecord
   include Comparable
+  include DrivingCalculations
 
   attr_reader :name
 
@@ -36,15 +39,13 @@ class DrivingRecord
     }
   end
 
-  def calc_speed
-    normalized_minutes = calc_total_minutes / 60
-
-    normalized_minutes > 0 ? (calc_total_distance / normalized_minutes).round.to_i : nil
+  def calc_average_speed
+    calc_speed(calc_total_minutes, calc_total_distance)
   end
 
   def to_s
     total_distance = calc_total_distance
-    average_speed = calc_speed
+    average_speed = calc_average_speed
     if (average_speed)
       "#{@name}: #{total_distance.round.to_i} miles @ #{average_speed} mph"
     else

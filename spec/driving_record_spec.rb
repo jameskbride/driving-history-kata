@@ -20,7 +20,7 @@ describe DrivingRecord do
     driving_record = DrivingRecord.new('short')
     driving_record.add_record(Trip.new('short', 17.3, '07:15', '07:45'))
 
-    expect(driving_record.calc_speed).to eq(35)
+    expect(driving_record.calc_average_speed).to eq(35)
   end
 
   describe 'when sorting' do
