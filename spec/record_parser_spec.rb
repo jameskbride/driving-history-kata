@@ -23,6 +23,17 @@ describe RecordParser do
 
       expect(trip.distance).to eq(17.3)
     end
-  end
 
+    it 'can parse out start time' do
+      trip = RecordParser::parse(trip_record)
+
+      expect(trip.start_time).to eq('07:15')
+    end
+
+    it 'can parse out an end time' do
+      trip = RecordParser::parse(trip_record)
+
+      expect(trip.end_time).to eq('07:45')
+    end
+  end
 end

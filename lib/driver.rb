@@ -5,4 +5,8 @@ class Driver
     @name = name
     @distance = 0
   end
+
+  def calc_minutes
+    0
+  end
 end

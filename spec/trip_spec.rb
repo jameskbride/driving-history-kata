@@ -20,4 +20,22 @@ describe Trip do
     expect(trip.distance).to eq(17.3)
   end
 
+  it 'can have a start time' do
+    trip = Trip.new('random', 17.3, '07:15')
+
+    expect(trip.start_time).to eq('07:15')
+  end
+
+  it 'can have an end time' do
+    trip = Trip.new('random', 17.3, '07:15', '08:15')
+
+    expect(trip.end_time).to eq('08:15')
+  end
+
+  it 'can calculate the trip minutes' do
+    trip = Trip.new('random', 17.3, '07:15', '08:15')
+
+    expect(trip.calc_minutes).to eq(60)
+  end
+
 end

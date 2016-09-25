@@ -12,4 +12,10 @@ describe Driver do
 
     expect(driver.distance).to eq(0)
   end
+
+  it 'calculates trip minutes to 0' do
+    driver = Driver.new('random')
+
+    expect(driver.calc_minutes).to eq(0)
+  end
 end

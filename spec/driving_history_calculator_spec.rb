@@ -54,12 +54,13 @@ describe DrivingHistoryCalculator do
         expect(report_lines[0]).to start_with('Dan: 17 miles')
       end
 
-      # it 'calculates the speed' do
-      #   report_lines = calculator.calc(driving_records)
-      #
-      #   expect(report_lines.length).to eq(1)
-      #   expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
-      # end
+      it 'calculates the speed' do
+        calculator = DrivingHistoryCalculator.new(driving_records)
+        report_lines = calculator.generate_report_lines()
+
+        expect(report_lines.length).to eq(1)
+        expect(report_lines[0]).to eq('Dan: 17 miles @ 35 mph')
+      end
     end
 
     describe 'When there are multiple entries for a single driver' do
